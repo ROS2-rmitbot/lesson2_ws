@@ -9,31 +9,23 @@ from launch.event_handlers import OnProcessExit
 
 def generate_launch_description():
     
+    # Path to the package description
+    pkg_path_description = get_package_share_directory("rmitbot_description")
+    pkg_path_controller = get_package_share_directory("rmitbot_controller")
+    
     # Launch rviz
     display = IncludeLaunchDescription(
-        os.path.join(
-            get_package_share_directory("rmitbot_description"),
-            "launch",
-            "display.launch.py"
-        ),
+        os.path.join(pkg_path_description,"launch","display.launch.py"),
     )
     
     # Launch gazebo
     gazebo = IncludeLaunchDescription(
-        os.path.join(
-            get_package_share_directory("rmitbot_description"),
-            "launch",
-            "gazebo.launch.py"
-        ),
+        os.path.join(pkg_path_description, "launch", "gazebo.launch.py"),
     )
     
     # Launch the controller manager
     controller = IncludeLaunchDescription(
-        os.path.join(
-            get_package_share_directory("rmitbot_controller"),
-            "launch",
-            "controller.launch.py"
-        ),
+        os.path.join(pkg_path_controller,"launch","controller.launch.py"),
     )
     
     # Launch the controller manager 3s after gazebo, to make sure the robot has spawned in simulation
@@ -44,14 +36,8 @@ def generate_launch_description():
     
     # Launch the teleop keyboard node
     teleopkeyboard = IncludeLaunchDescription(
-        os.path.join(
-            get_package_share_directory("rmitbot_controller"),
-            "launch",
-            "teleopkeyboard.launch.py"
-        ),
-        launch_arguments={
-            "use_sim_time": "True"
-        }.items()
+        os.path.join(pkg_path_controller,"launch","teleopkeyboard.launch.py"),
+        launch_arguments={"use_sim_time": "True"}.items()
     )
     
     return LaunchDescription([
